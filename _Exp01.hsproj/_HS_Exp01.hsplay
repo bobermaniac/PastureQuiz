@@ -1,6 +1,12 @@
 -- Haskell Playground 1.0
-feed CloverPasture Cow
-water CloverPasture Cow
+feed CloverPasture Cow eat
+feed CloverPasture Cow drink
 
-water CloverPasture Wolf
-feed CloverPasture Wolf
+feed CloverPasture Wolf eat
+feed CloverPasture Wolf drink
+
+feed Butchery Cow eat
+feed Butchery Cow drink
+
+feed Butchery Wolf eat
+feed Butchery Wolf drink

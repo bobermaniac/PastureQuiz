@@ -49,22 +49,22 @@ instance Animal Carnivore where
   type PrefferedLiquid Carnivore = Water
   animalName Wolf = "wolf"
   
-class (Food food) => Feeder feeder food where
-  feedee :: feeder -> food
-  feed :: (Animal animal, PrefferedFood animal ~ food) => feeder -> animal -> String
-  feed feeder animal = eat animal (feedee feeder)
-  
-class (Liquid liquid) => LiquidSource drinker liquid where
-  drinkee :: drinker -> liquid
-  water :: (Animal animal, PrefferedLiquid animal ~ liquid) => drinker -> animal -> String
-  water drinker animal = drink animal (drinkee drinker)
+class Feeder feeder food where
+  supply :: feeder -> food
+  feed :: feeder -> animal -> (animal -> food -> String) -> String
+  feed feeder animal consume = consume animal (supply feeder)
 
 data Pasture = CloverPasture
 
 instance Feeder Pasture Grass where
-  feedee CloverPasture = Clover
+  supply CloverPasture = Clover
+  
+instance Feeder Pasture Water where
+  supply CloverPasture = StillWater
 
-instance LiquidSource Pasture Water where
-  drinkee CloverPasture = StillWater
+data Butchery = Butchery
+
+instance Feeder Butchery Meat where
+  supply Butchery = RawMeat
 
   
