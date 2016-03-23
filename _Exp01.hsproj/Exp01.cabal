@@ -1,0 +1,11 @@
+name: Exp01
+version: 1.0
+cabal-version: 1.6
+build-type: Simple
+license: AllRightsReserved
+stability: experimental
+Executable Exp01
+  main-is: HS_Exp01.hs
+  buildable: True
+  build-depends:
+      base -any
