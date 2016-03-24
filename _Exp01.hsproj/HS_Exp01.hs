@@ -2,28 +2,26 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 
-import Prelude
-
 class Food food where
   foodName :: food -> String
 
-data Grass = Clover
+data Grass = Clover String
 
-data Meat = RawMeat
+data Meat = Meat String
 
 instance Food Grass where
-  foodName Clover = "fresh clover"
+  foodName (Clover adj) =  adj ++ " clover"
   
 instance Food Meat where
-  foodName RawMeat = "some raw meat"
+  foodName (Meat adj) = adj ++ " meat"
   
 class Liquid liquid where
   liquidName :: liquid -> String
   
-data Water = StillWater
+data Water = Water String
 
 instance Liquid Water where
-  liquidName StillWater = "still water"
+  liquidName (Water adj) = adj ++ " water"
 
 class Animal animal where
   type PrefferedFood animal
@@ -34,37 +32,35 @@ class Animal animal where
   eat animal food = animalName animal ++ ", eats " ++ foodName food
   drink animal liquid = animalName animal ++ ", drinks " ++ liquidName liquid
 
-data Herbivore = Cow | Bull
+data Herbivore = Cow String | Bull String
 
-data Carnivore = Wolf
+data Carnivore = Wolf String
 
 instance Animal Herbivore where
   type PrefferedFood Herbivore = Grass
   type PrefferedLiquid Herbivore = Water
-  animalName Cow = "cow"
-  animalName Bull = "bull"
+  animalName (Cow adj) = adj ++ " cow"
+  animalName (Bull adj) = adj ++ " bull"
   
 instance Animal Carnivore where
   type PrefferedFood Carnivore = Meat
   type PrefferedLiquid Carnivore = Water
-  animalName Wolf = "wolf"
+  animalName (Wolf adj) = adj ++ " wolf"
   
 class Feeder feeder food where
   supply :: feeder -> food
-  feed :: feeder -> animal -> (animal -> food -> String) -> String
-  feed feeder animal consume = consume animal (supply feeder)
+  on :: feeder -> animal -> (animal -> food -> String) -> String
+  on feeder animal consume = consume animal (supply feeder)
 
 data Pasture = CloverPasture
 
 instance Feeder Pasture Grass where
-  supply CloverPasture = Clover
+  supply CloverPasture = Clover "fresh"
   
 instance Feeder Pasture Water where
-  supply CloverPasture = StillWater
+  supply CloverPasture = Water "fresh"
 
 data Butchery = Butchery
 
 instance Feeder Butchery Meat where
-  supply Butchery = RawMeat
-
-  
+  supply Butchery = Meat "raw"

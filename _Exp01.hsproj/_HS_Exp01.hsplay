@@ -1,12 +1,25 @@
 -- Haskell Playground 1.0
-feed CloverPasture Cow eat
-feed CloverPasture Cow drink
+let cow = Cow "white"
+let bull = Bull "mighty"
+let wolf = Wolf "grey"
 
-feed CloverPasture Wolf eat
-feed CloverPasture Wolf drink
+let pasture = CloverPasture
+let butchery = Butchery
 
-feed Butchery Cow eat
-feed Butchery Cow drink
+on pasture cow eat
+on pasture cow drink
 
-feed Butchery Wolf eat
-feed Butchery Wolf drink
+on pasture bull eat
+on pasture bull drink
+
+on pasture wolf eat
+on pasture wolf drink
+
+on butchery cow eat
+on butchery cow drink
+
+on butchery bull eat
+on butchery bull drink
+
+on butchery wolf eat
+on butchery wolf drink
