@@ -1,66 +1,86 @@
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE ConstraintKinds #-}
 
-class Food food where
-  foodName :: food -> String
+import Prelude
+import GHC.Prim
 
-data Grass = Clover String
+-- Consumable classes
 
-data Meat = Meat String
-
-instance Food Grass where
-  foodName (Clover adj) =  adj ++ " clover"
+class Consumable c' where
+  consumableName :: c' -> String
+  consumableName _ = "unknown consumable"
   
-instance Food Meat where
-  foodName (Meat adj) = adj ++ " meat"
+class (Consumable c') => Plant c'
+
+class (Consumable c') => Flesh c'
+
+-- Consumable instances
+
+data Grass = Clover | MeadowGrass
+
+instance Consumable Grass where
+  consumableName Clover = "clover"
+  consumableName MeadowGrass = "meadow grass"
   
-class Liquid liquid where
-  liquidName :: liquid -> String
+instance Plant Grass
+
+data Meat = Meat
+
+instance Consumable Meat where
+  consumableName Meat = "some meat"
   
-data Water = Water String
+instance Flesh Meat
+
+-- Liquid classes
+
+class Liquid l' where
+  liquidName :: l' -> String
+  liquidName _ = "unknown liquid"
+
+-- Liquid instances
+
+data Water = Water
 
 instance Liquid Water where
-  liquidName (Water adj) = adj ++ " water"
+  liquidName Water = "water"
 
-class Animal animal where
-  type PrefferedFood animal
-  type PrefferedLiquid animal
-  animalName :: animal -> String
-  eat :: Food (PrefferedFood animal) => animal -> PrefferedFood animal -> String
-  drink :: Liquid (PrefferedLiquid animal) => animal -> PrefferedLiquid animal -> String
-  eat animal food = animalName animal ++ ", eats " ++ foodName food
-  drink animal liquid = animalName animal ++ ", drinks " ++ liquidName liquid
+-- Animal class
 
-data Herbivore = Cow String | Bull String
+class Animal a' where
+  animalName :: a' -> String
+  type Food a' c' :: Constraint
+  type Drink a' l' :: Constraint
+  accept :: a' -> supply' -> (supply' -> String) -> String -> String
+  eat :: (Consumable f', Food a' f') => a' -> f' -> String
+  drink :: (Liquid l', Drink a' l') => a' -> l' -> String
+  type Food a' c' = Consumable c'
+  type Drink a' l' = Liquid l'
+  accept animal supply transform joint = animalName animal ++ ", " ++ joint ++ " " ++ transform supply
+  eat animal food = accept animal food consumableName "eat"
+  drink animal liquid = accept animal liquid liquidName "drink"
+  
+-- Animal instances
 
-data Carnivore = Wolf String
+data Herbivore = Cow
 
 instance Animal Herbivore where
-  type PrefferedFood Herbivore = Grass
-  type PrefferedLiquid Herbivore = Water
-  animalName (Cow adj) = adj ++ " cow"
-  animalName (Bull adj) = adj ++ " bull"
+  animalName Cow = "cow"
+  type Food Herbivore c' = Plant c'
   
+instance Consumable Herbivore where
+  consumableName Cow = "beef"
+  
+instance Flesh Herbivore
+
+data Carnivore = Wolf
+
 instance Animal Carnivore where
-  type PrefferedFood Carnivore = Meat
-  type PrefferedLiquid Carnivore = Water
-  animalName (Wolf adj) = adj ++ " wolf"
+  animalName Wolf = "wolf"
+  type Food Carnivore c' = Flesh c'
   
-class Feeder feeder food where
-  supply :: feeder -> food
-  on :: feeder -> animal -> (animal -> food -> String) -> String
-  on feeder animal consume = consume animal (supply feeder)
-
-data Pasture = CloverPasture
-
-instance Feeder Pasture Grass where
-  supply CloverPasture = Clover "fresh"
+instance Consumable Carnivore where
+  consumableName Wolf = "wolf's meat"
   
-instance Feeder Pasture Water where
-  supply CloverPasture = Water "fresh"
-
-data Butchery = Butchery
-
-instance Feeder Butchery Meat where
-  supply Butchery = Meat "raw"
+instance Flesh Carnivore 

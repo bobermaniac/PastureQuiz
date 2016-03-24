@@ -1,25 +1,15 @@
 -- Haskell Playground 1.0
-let cow = Cow "white"
-let bull = Bull "mighty"
-let wolf = Wolf "grey"
+Cow `eat` Clover
+Cow `eat` MeadowGrass
+Cow `eat` Meat
+Cow `eat` Cow
+Cow `eat` Wolf
 
-let pasture = CloverPasture
-let butchery = Butchery
+Wolf `eat` Clover
+Wolf `eat` MeadowGrass
+Wolf `eat` Meat
+Wolf `eat` Cow
+Wolf `eat` Wolf
 
-on pasture cow eat
-on pasture cow drink
-
-on pasture bull eat
-on pasture bull drink
-
-on pasture wolf eat
-on pasture wolf drink
-
-on butchery cow eat
-on butchery cow drink
-
-on butchery bull eat
-on butchery bull drink
-
-on butchery wolf eat
-on butchery wolf drink
+Cow `drink` Water
+Wolf `drink` Water
