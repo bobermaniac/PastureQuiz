@@ -13,3 +13,17 @@ Wolf `eat` Wolf
 
 Cow `drink` Water
 Wolf `drink` Water
+
+Cow `eat` Wheat
+
+on Pasture Cow eat Clover
+on Pasture Cow eat MeadowGrass
+on Pasture Cow eat Wheat
+on Pasture Cow eat Cow
+on Pasture Cow eat Wolf
+on Pasture Cow drink Water
+
+on Pasture Wolf eat Clover
+on Pasture Wolf eat Cow
+on Pasture Wolf eat Wolf
+on Pasture Wolf drink Water

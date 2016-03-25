@@ -26,6 +26,13 @@ instance Consumable Grass where
   
 instance Plant Grass
 
+data Grain = Wheat
+
+instance Consumable Grain where
+  consumableName Wheat = "wheat"
+  
+instance Plant Grain
+
 data Meat = Meat
 
 instance Consumable Meat where
@@ -84,3 +91,19 @@ instance Consumable Carnivore where
   consumableName Wolf = "wolf's meat"
   
 instance Flesh Carnivore 
+
+-- Source class
+
+class Source s' k' where
+  on :: s' -> a' -> (a' -> k' -> String) -> k' -> String
+  on source animal action item = action animal item
+  
+data Field = Pasture
+
+instance Source Field Grass
+instance Source Field Herbivore
+instance Source Field Water
+
+data Butchery = Butchery
+
+instance Source Butchery Meat
